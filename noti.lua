@@ -1,6 +1,7 @@
 local WEBHOOK_URL = "https://discord.com/api/webhooks/1488442806992109710/Ua4BOZiqbRCFQKrrWX1MTiPB9j6gPI8sIHzAwAxT2qKs18_soIEDmqvO0mjHCR4MSY8T"
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
+
 local BOSS_CONFIG = {
     ["Sea King"]               = { label="Sea King",                   emoji="🌊", color=3447003  },
     ["Serpent"]                = { label="Serpent",                    emoji="🐍", color=3447003  },
@@ -14,7 +15,7 @@ local BOSS_CONFIG = {
 }
 
 local NOTIFY_COOLDOWN = 90
-local Notiboss  = {}
+local Notiboss = {}
 
 local function getTimeOfDay()
     local lighting     = game:GetService("Lighting")
@@ -42,6 +43,7 @@ local function buildJoinScript()
         tostring(game.PlaceId) .. ', "' .. game.JobId .. '", ' ..
         'game:GetService("Players").LocalPlayer)'
 end
+
 sendWebhook = function(cfg)
     local description =
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
@@ -85,19 +87,42 @@ sendWebhook = function(cfg)
                 HttpService:PostAsync(WEBHOOK_URL, payload, Enum.HttpContentType.ApplicationJson)
             end
         end)
-        end
     end)
+end
+
+-- ==================== FIX: รองรับ nested model เช่น Pteranodon_KL ====================
+local function findHumAndRoot(mob)
+    -- หาใน parent ก่อน
+    local hum  = mob:FindFirstChildOfClass("Humanoid")
+    local root = mob:FindFirstChild("HumanoidRootPart")
+    if hum and root then return hum, root end
+
+    -- ถ้าไม่เจอ ให้หาใน child model (เช่น Pteranodon_KL)
+    for _, child in ipairs(mob:GetChildren()) do
+        if child:IsA("Model") then
+            local h = child:FindFirstChildOfClass("Humanoid")
+            local r = child:FindFirstChild("HumanoidRootPart")
+            if h and r then return h, r end
+        end
+    end
+
+    -- fallback: recursive ทุก descendant
+    local h = mob:FindFirstChildWhichIsA("Humanoid", true)
+    local r = mob:FindFirstChild("HumanoidRootPart", true)
+    return h, r
 end
 
 local function tryNotify(mobName, mob)
     local cfg = BOSS_CONFIG[mobName]
     if not cfg then return end
-    local hum  = mob:FindFirstChildOfClass("Humanoid")
-    local root = mob:FindFirstChild("HumanoidRootPart")
+
+    local hum, root = findHumAndRoot(mob)
+
     if not (hum and root and hum.Health > 0) then
         Notiboss[mobName] = nil
         return
     end
+
     local now = tick()
     if Notiboss[mobName] and (now - Notiboss[mobName]) < NOTIFY_COOLDOWN then return end
     Notiboss[mobName] = now
@@ -140,6 +165,13 @@ task.spawn(function()
                 scanFolder(monsterFolder:FindFirstChild("Boss"))
             end
             scanFolder(workspace:FindFirstChild("SeaMonster"))
+            -- FIX: scan Pteranodon_KL folder โดยตรงด้วย (เผื่อ spawn แยก folder)
+            local pteroKL = workspace:FindFirstChild("Pteranodon_KL")
+            if pteroKL then
+                for _, mob in ipairs(pteroKL:GetChildren()) do
+                    tryNotify("Pteranodon [Lv. 12500]", mob)
+                end
+            end
             scanGhostShip()
         end)
         task.wait(5)
