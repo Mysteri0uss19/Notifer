@@ -12,7 +12,7 @@ local BOSS_CONFIG = {
     ["GhostShip"]              = { label="Ghost Ship",                 emoji="👻", color=9807270  },
 }
 
-local NOTIFY_COOLDOWN = 5
+local NOTIFY_COOLDOWN = 90
 local Notiboss  = {}
 
 local function getTimeOfDay()
