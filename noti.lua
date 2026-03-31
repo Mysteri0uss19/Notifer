@@ -3,18 +3,20 @@ local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
 local BOSS_CONFIG = {
-    ["Sea King"]               = { label="Sea King",                   emoji="🌊", color=3447003  },
-    ["Serpent"]                = { label="Serpent",                    emoji="🐍", color=3447003  },
-    ["HydraSeaKing"]           = { label="Hydra Sea King",             emoji="🐙", color=10038562 },
-    ["ThirdSeaDragon"]         = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
-    ["SeaDragon"]              = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
-    ["Shark Galleon Boss"]     = { label="Shark Galleon Boss",         emoji="🦈", color=3447003  },
-    ["Kraken Galleon Boss"]    = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
-    ["Pteranodon [Lv. 12500]"] = { label="Pteranodon",                 emoji="🦕", color=5763719  },
-    ["GhostShip"]              = { label="Ghost Ship",                 emoji="👻", color=9807270  },
-    ["Whale Galleon Boss"] = { label="Whale Galleon Boss", emoji="🐋", color=3447003 },
-    ["ThirdSeaEldritch Crab"] = { label="Eldritch Crab", emoji="🦀", color=10038562 },
-
+    ["Sea King"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
+    ["Serpent"]                  = { label="Serpent",                    emoji="🐍", color=3447003  },
+    ["HydraSeaKing"]             = { label="Hydra Sea King",             emoji="🐙", color=10038562 },
+    ["ThirdSeaDragon"]           = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
+    ["SeaDragon"]                = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
+    ["Shark Galleon Boss"]       = { label="Shark Galleon Boss",         emoji="🦈", color=3447003  },
+    ["Kraken Galleon Boss"]      = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
+    ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                 emoji="🦕", color=5763719  },
+    ["GhostShip"]                = { label="Ghost Ship",                 emoji="👻", color=9807270  },
+    ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",         emoji="🐋", color=3447003  },
+    ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",              emoji="🦀", color=10038562 },
+    ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",             emoji="⚔️", color=15844367 },
+    ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",               emoji="🦅", color=15105570 },
+    ["FuryTentacle"]             = { label="Kraken",              emoji="🐙", color=10038562 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -89,18 +91,24 @@ end
 local function findHumAndRoot(mob)
     local hum  = mob:FindFirstChildOfClass("Humanoid")
     local root = mob:FindFirstChild("HumanoidRootPart")
+                 or mob:FindFirstChild("Tentacle")
+                 or mob.PrimaryPart
     if hum and root then return hum, root end
 
     for _, child in ipairs(mob:GetChildren()) do
         if child:IsA("Model") then
             local h = child:FindFirstChildOfClass("Humanoid")
             local r = child:FindFirstChild("HumanoidRootPart")
+                      or child:FindFirstChild("Tentacle")
+                      or child.PrimaryPart
             if h and r then return h, r end
         end
     end
 
     local h = mob:FindFirstChildWhichIsA("Humanoid", true)
     local r = mob:FindFirstChild("HumanoidRootPart", true)
+              or mob:FindFirstChild("Tentacle", true)
+              or mob.PrimaryPart
     return h, r
 end
 
@@ -152,17 +160,30 @@ end
 task.spawn(function()
     while true do
         pcall(function()
+            -- Monster.Boss (Sea King, Lord of Saber, FuryTentacle, Pteranodon, etc.)
             local monsterFolder = workspace:FindFirstChild("Monster")
             if monsterFolder then
                 scanFolder(monsterFolder:FindFirstChild("Boss"))
             end
+
+            -- SeaMonster (Hydra, Draken, Shark/Kraken/Whale Galleon, etc.)
             scanFolder(workspace:FindFirstChild("SeaMonster"))
+
+            -- MOB (Ashen Talon)
+            local mobFolder = workspace:FindFirstChild("MOB")
+            if mobFolder then
+                scanFolder(mobFolder)
+            end
+
+            -- Pteranodon_KL (fallback)
             local pteroKL = workspace:FindFirstChild("Pteranodon_KL")
             if pteroKL then
                 for _, mob in ipairs(pteroKL:GetChildren()) do
                     tryNotify("Pteranodon [Lv. 12500]", mob)
                 end
             end
+
+            -- Ghost Ship
             scanGhostShip()
         end)
         task.wait(5)
