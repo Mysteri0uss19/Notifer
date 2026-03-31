@@ -1,5 +1,6 @@
 local WEBHOOK_URL = "https://discord.com/api/webhooks/1488442806992109710/Ua4BOZiqbRCFQKrrWX1MTiPB9j6gPI8sIHzAwAxT2qKs18_soIEDmqvO0mjHCR4MSY8T"
-
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
 local BOSS_CONFIG = {
     ["Sea King"]               = { label="Sea King",                   emoji="🌊", color=3447003  },
     ["Serpent"]                = { label="Serpent",                    emoji="🐍", color=3447003  },
