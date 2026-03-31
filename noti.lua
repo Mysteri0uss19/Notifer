@@ -85,11 +85,6 @@ sendWebhook = function(cfg)
                 HttpService:PostAsync(WEBHOOK_URL, payload, Enum.HttpContentType.ApplicationJson)
             end
         end)
-
-        if ok then
-            print("[Notifier] ✅ " .. cfg.emoji .. " " .. cfg.label)
-        else
-            warn("[Notifier] ❌ ส่งไม่ได้: " .. tostring(err))
         end
     end)
 end
