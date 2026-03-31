@@ -12,6 +12,9 @@ local BOSS_CONFIG = {
     ["Kraken Galleon Boss"]    = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
     ["Pteranodon [Lv. 12500]"] = { label="Pteranodon",                 emoji="🦕", color=5763719  },
     ["GhostShip"]              = { label="Ghost Ship",                 emoji="👻", color=9807270  },
+    ["Whale Galleon Boss"] = { label="Whale Galleon Boss", emoji="🐋", color=3447003 },
+    ["ThirdSeaEldritch Crab"] = { label="Eldritch Crab", emoji="🦀", color=10038562 },
+
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -44,7 +47,7 @@ sendWebhook = function(cfg)
         cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
         "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
-        "⏰ **Time of Day**\n> `" .. getTimeOfDay() .. "`\n\n" ..
+        "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
         "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
         "🔑 **Job ID**\n> `" .. game.JobId .. "`\n\n" ..
