@@ -38,12 +38,6 @@ local function getWorldName()
     else return "🗺️ Unknown World" end
 end
 
-local function buildJoinScript()
-    return 'game:GetService("TeleportService"):TeleportToPlaceInstance(' ..
-        tostring(game.PlaceId) .. ', "' .. game.JobId .. '", ' ..
-        'game:GetService("Players").LocalPlayer)'
-end
-
 sendWebhook = function(cfg)
     local description =
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
@@ -53,8 +47,7 @@ sendWebhook = function(cfg)
         "⏰ **Time of Day**\n> `" .. getTimeOfDay() .. "`\n\n" ..
         "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        "🚀 **Join Script** *(Copy แล้วรันใน Executor)*\n" ..
-        "```lua\n" .. buildJoinScript() .. "\n```\n" ..
+        "🔑 **Job ID**\n> `" .. game.JobId .. "`\n\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
         "*Detected by AxelHub Notifier*"
 
@@ -90,11 +83,14 @@ sendWebhook = function(cfg)
     end)
 end
 
+-- ==================== FIX: รองรับ nested model เช่น Pteranodon_KL ====================
 local function findHumAndRoot(mob)
+    -- หาใน parent ก่อน
     local hum  = mob:FindFirstChildOfClass("Humanoid")
     local root = mob:FindFirstChild("HumanoidRootPart")
     if hum and root then return hum, root end
 
+    -- ถ้าไม่เจอ ให้หาใน child model (เช่น Pteranodon_KL)
     for _, child in ipairs(mob:GetChildren()) do
         if child:IsA("Model") then
             local h = child:FindFirstChildOfClass("Humanoid")
@@ -103,6 +99,7 @@ local function findHumAndRoot(mob)
         end
     end
 
+    -- fallback: recursive ทุก descendant
     local h = mob:FindFirstChildWhichIsA("Humanoid", true)
     local r = mob:FindFirstChild("HumanoidRootPart", true)
     return h, r
@@ -161,6 +158,7 @@ task.spawn(function()
                 scanFolder(monsterFolder:FindFirstChild("Boss"))
             end
             scanFolder(workspace:FindFirstChild("SeaMonster"))
+            -- FIX: scan Pteranodon_KL folder โดยตรงด้วย (เผื่อ spawn แยก folder)
             local pteroKL = workspace:FindFirstChild("Pteranodon_KL")
             if pteroKL then
                 for _, mob in ipairs(pteroKL:GetChildren()) do
