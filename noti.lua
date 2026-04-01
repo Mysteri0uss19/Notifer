@@ -16,7 +16,7 @@ local BOSS_CONFIG = {
     ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",              emoji="🦀", color=10038562 },
     ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",             emoji="⚔️", color=15844367 },
     ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",               emoji="🦅", color=15105570 },
-    ["FuryTentacle"]             = { label="Kraken",              emoji="🐙", color=10038562 },
+    ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -43,6 +43,26 @@ local function getWorldName()
     else return "🗺️ Unknown World" end
 end
 
+local function sendRequest(payload)
+    local ok, err = pcall(function()
+        local requestFunc = syn and syn.request
+            or http and http.request
+            or (typeof(request) == "function" and request)
+            or nil
+
+        if requestFunc then
+            requestFunc({
+                Url     = WEBHOOK_URL,
+                Method  = "POST",
+                Headers = { ["Content-Type"] = "application/json" },
+                Body    = payload,
+            })
+        else
+            HttpService:PostAsync(WEBHOOK_URL, payload, Enum.HttpContentType.ApplicationJson)
+        end
+    end)
+end
+
 sendWebhook = function(cfg)
     local description =
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
@@ -56,35 +76,28 @@ sendWebhook = function(cfg)
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
         "*Detected by AxelHub Notifier*"
 
-    local payload = HttpService:JSONEncode({
-        username = "⚔️ AxelHub Notifier",
-        embeds = {{
-            title       = cfg.emoji .. "  Boss Alert — King Legacy",
-            description = description,
-            color       = cfg.color,
-            footer      = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
-            thumbnail   = { url = "https://www.roblox.com/favicon.ico" },
-        }}
-    })
-
     task.spawn(function()
-        local ok, err = pcall(function()
-            local requestFunc = syn and syn.request
-                or http and http.request
-                or (typeof(request) == "function" and request)
-                or nil
+        -- Message 1: Embed ปกติ
+        local payload1 = HttpService:JSONEncode({
+            username = "⚔️ AxelHub Notifier",
+            embeds = {{
+                title       = cfg.emoji .. "  Boss Alert — King Legacy",
+                description = description,
+                color       = cfg.color,
+                footer      = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
+                thumbnail   = { url = "https://www.roblox.com/favicon.ico" },
+            }}
+        })
+        sendRequest(payload1)
 
-            if requestFunc then
-                requestFunc({
-                    Url     = WEBHOOK_URL,
-                    Method  = "POST",
-                    Headers = { ["Content-Type"] = "application/json" },
-                    Body    = payload,
-                })
-            else
-                HttpService:PostAsync(WEBHOOK_URL, payload, Enum.HttpContentType.ApplicationJson)
-            end
-        end)
+        task.wait(0.5)
+
+        -- Message 2: Job ID ล้วนๆ long press แล้ว copy ได้เลย
+        local payload2 = HttpService:JSONEncode({
+            username = "⚔️ AxelHub Notifier",
+            content  = game.JobId,
+        })
+        sendRequest(payload2)
     end)
 end
 
@@ -160,22 +173,18 @@ end
 task.spawn(function()
     while true do
         pcall(function()
-            -- Monster.Boss (Sea King, Lord of Saber, FuryTentacle, Pteranodon, etc.)
             local monsterFolder = workspace:FindFirstChild("Monster")
             if monsterFolder then
                 scanFolder(monsterFolder:FindFirstChild("Boss"))
             end
 
-            -- SeaMonster (Hydra, Draken, Shark/Kraken/Whale Galleon, etc.)
             scanFolder(workspace:FindFirstChild("SeaMonster"))
 
-            -- MOB (Ashen Talon)
             local mobFolder = workspace:FindFirstChild("MOB")
             if mobFolder then
                 scanFolder(mobFolder)
             end
 
-            -- Pteranodon_KL (fallback)
             local pteroKL = workspace:FindFirstChild("Pteranodon_KL")
             if pteroKL then
                 for _, mob in ipairs(pteroKL:GetChildren()) do
@@ -183,7 +192,6 @@ task.spawn(function()
                 end
             end
 
-            -- Ghost Ship
             scanGhostShip()
         end)
         task.wait(5)
