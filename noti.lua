@@ -94,7 +94,7 @@ sendWebhook = function(cfg)
 
         local payload2 = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
-            content  = "🔑 **Job ID** → `" game.JobId,
+            content  = game.JobId,
         })
         sendRequest(payload2)
     end)
