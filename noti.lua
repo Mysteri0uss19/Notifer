@@ -44,7 +44,7 @@ local function getWorldName()
 end
 
 local function sendRequest(payload)
-    local ok, err = pcall(function()
+    pcall(function()
         local requestFunc = syn and syn.request
             or http and http.request
             or (typeof(request) == "function" and request)
@@ -64,38 +64,34 @@ local function sendRequest(payload)
 end
 
 sendWebhook = function(cfg)
-    local description =
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
-        "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
-        "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
-        "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        "🔑 **Job ID**\n> `" .. game.JobId .. "`\n\n" ..
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        "*Detected by AxelHub Notifier*"
-
     task.spawn(function()
-        -- Message 1: Embed ปกติ
+
         local payload1 = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
             embeds = {{
                 title       = cfg.emoji .. "  Boss Alert — King Legacy",
-                description = description,
                 color       = cfg.color,
-                footer      = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
-                thumbnail   = { url = "https://www.roblox.com/favicon.ico" },
+                description =
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+                    cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                fields = {
+                    { name = "🌐  World",        value = getWorldName(),               inline = false },
+                    { name = "⏰  Server Time",  value = "`" .. getTimeOfDay() .. "`", inline = true  },
+                    { name = "👥  Players",      value = "`" .. getPlayerCount() .. "`", inline = true },
+                    { name = "🔑  Job ID",       value = "`" .. game.JobId .. "`",     inline = false },
+                },
+                footer    = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
+                thumbnail = { url = "https://www.roblox.com/favicon.ico" },
             }}
         })
         sendRequest(payload1)
 
         task.wait(0.5)
 
-        -- Message 2: Job ID ล้วนๆ long press แล้ว copy ได้เลย
         local payload2 = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
-            content  = game.JobId,
+            content  = "📋 **Job ID (Mobile Copy)**\n" .. game.JobId,
         })
         sendRequest(payload2)
     end)
