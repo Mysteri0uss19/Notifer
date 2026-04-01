@@ -89,14 +89,6 @@ sendWebhook = function(cfg)
             }}
         })
         sendRequest(payload1)
-
-        task.wait(0.5)
-
-        local payload2 = HttpService:JSONEncode({
-            username = "⚔️ AxelHub Notifier",
-            content  = game.JobId,
-        })
-        sendRequest(payload2)
     end)
 end
 
