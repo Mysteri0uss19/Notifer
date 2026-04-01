@@ -64,26 +64,28 @@ local function sendRequest(payload)
 end
 
 sendWebhook = function(cfg)
-    task.spawn(function()
+    local description =
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+        cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
+        "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
+        "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
+        "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+        "🔑 **Job ID** → `" .. game.JobId .. "`\n\n" ..
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+        "*Detected by AxelHub Notifier*"
 
+    task.spawn(function()
         local payload1 = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
+            content  = "🔑 **Job ID** → `" .. game.JobId .. "`",
             embeds = {{
                 title       = cfg.emoji .. "  Boss Alert — King Legacy",
+                description = description,
                 color       = cfg.color,
-                description =
-                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-                    cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
-                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
-                    "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
-                    "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
-                    "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
-                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-                    "🔑 **Job ID** → `" .. game.JobId .. "`\n\n" ..
-                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-                    "*Detected by AxelHub Notifier*",
-                footer    = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
-                thumbnail = { url = "https://www.roblox.com/favicon.ico" },
+                footer      = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
+                thumbnail   = { url = "https://www.roblox.com/favicon.ico" },
             }}
         })
         sendRequest(payload1)
@@ -92,7 +94,7 @@ sendWebhook = function(cfg)
 
         local payload2 = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
-            content  = "📋 **Job ID (Mobile Copy)**\n" .. game.JobId,
+            content  = "🔑 **Job ID** → `" game.JobId,
         })
         sendRequest(payload2)
     end)
