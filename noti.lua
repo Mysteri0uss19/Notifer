@@ -16,7 +16,7 @@ local BOSS_CONFIG = {
     ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",              emoji="🦀", color=10038562 },
     ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",             emoji="⚔️", color=15844367 },
     ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",               emoji="🦅", color=15105570 },
-    ["FuryTentacle"]             = { label="Kraken",              emoji="🐙", color=10038562 },
+    ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -52,12 +52,11 @@ sendWebhook = function(cfg)
         "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
         "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        "🔑 **Job ID**\n> `" .. game.JobId .. "`\n\n" ..
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
         "*Detected by AxelHub Notifier*"
 
     local payload = HttpService:JSONEncode({
         username = "⚔️ AxelHub Notifier",
+        content = "🔑 **Job ID** → `" .. game.JobId .. "`",
         embeds = {{
             title       = cfg.emoji .. "  Boss Alert — King Legacy",
             description = description,
@@ -160,22 +159,18 @@ end
 task.spawn(function()
     while true do
         pcall(function()
-            -- Monster.Boss (Sea King, Lord of Saber, FuryTentacle, Pteranodon, etc.)
             local monsterFolder = workspace:FindFirstChild("Monster")
             if monsterFolder then
                 scanFolder(monsterFolder:FindFirstChild("Boss"))
             end
 
-            -- SeaMonster (Hydra, Draken, Shark/Kraken/Whale Galleon, etc.)
             scanFolder(workspace:FindFirstChild("SeaMonster"))
 
-            -- MOB (Ashen Talon)
             local mobFolder = workspace:FindFirstChild("MOB")
             if mobFolder then
                 scanFolder(mobFolder)
             end
 
-            -- Pteranodon_KL (fallback)
             local pteroKL = workspace:FindFirstChild("Pteranodon_KL")
             if pteroKL then
                 for _, mob in ipairs(pteroKL:GetChildren()) do
@@ -183,7 +178,6 @@ task.spawn(function()
                 end
             end
 
-            -- Ghost Ship
             scanGhostShip()
         end)
         task.wait(5)
