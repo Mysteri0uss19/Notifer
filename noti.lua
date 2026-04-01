@@ -74,13 +74,14 @@ sendWebhook = function(cfg)
                 description =
                     "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
                     cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
-                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-                fields = {
-                    { name = "🌐  World",        value = getWorldName(),               inline = false },
-                    { name = "⏰  Server Time",  value = "`" .. getTimeOfDay() .. "`", inline = true  },
-                    { name = "👥  Players",      value = "`" .. getPlayerCount() .. "`", inline = true },
-                    { name = "🔑  Job ID",       value = "`" .. game.JobId .. "`",     inline = false },
-                },
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
+                    "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
+                    "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
+                    "👥 **Players**\n> `" .. getPlayerCount() .. "`\n\n" ..
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+                    "🔑 **Job ID** → `" .. game.JobId .. "`\n\n" ..
+                    "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+                    "*Detected by AxelHub Notifier*",
                 footer    = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC  •  AxelHub v0.0.3" },
                 thumbnail = { url = "https://www.roblox.com/favicon.ico" },
             }}
