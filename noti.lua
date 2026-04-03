@@ -17,6 +17,7 @@ local BOSS_CONFIG = {
     ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",             emoji="⚔️", color=15844367 },
     ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",               emoji="🦅", color=15105570 },
     ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
+    ["Whirlpool"] = { label="Whirlpool", emoji="🌀", color=1752220 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -90,6 +91,26 @@ sendWebhook = function(cfg)
         })
         sendRequest(payload1)
     end)
+end
+local function scanWhirlpool()
+    local whirlpool = nil
+
+    local e = workspace:FindFirstChild("Effects")
+    if e then
+        whirlpool = e:FindFirstChild("SerpentWhirlpool")
+            or e:FindFirstChild("SeaKingWhirlpool")
+            or e:FindFirstChild("Whirlpool")
+    end
+
+    if whirlpool then
+        local now = tick()
+        if not Notiboss["Whirlpool"] or (now - Notiboss["Whirlpool"]) > NOTIFY_COOLDOWN then
+            Notiboss["Whirlpool"] = now
+            sendWebhook(BOSS_CONFIG["Whirlpool"])
+        end
+    else
+        Notiboss["Whirlpool"] = nil
+    end
 end
 
 local function findHumAndRoot(mob)
@@ -182,7 +203,7 @@ task.spawn(function()
                     tryNotify("Pteranodon [Lv. 12500]", mob)
                 end
             end
-
+            scanWhirlpool()
             scanGhostShip()
         end)
         task.wait(5)
