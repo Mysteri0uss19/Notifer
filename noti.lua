@@ -18,6 +18,8 @@ local BOSS_CONFIG = {
     ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",               emoji="🦅", color=15105570 },
     ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
     ["Whirlpool"] = { label="Whirlpool", emoji="🌀", color=1752220 },
+    ["King Samurai [Lv. 3500]"]  = { label="King Samurai",               emoji="⚔️", color=15105570 },
+
 }
 
 local NOTIFY_COOLDOWN = 90
