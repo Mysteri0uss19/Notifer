@@ -19,6 +19,7 @@ local BOSS_CONFIG = {
     ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
     ["Whirlpool"]                = { label="Whirlpool",                  emoji="🌀", color=1752220  },
     ["King Samurai [Lv. 3500]"]  = { label="King Samurai",               emoji="⚔️", color=15105570 },
+    ["Ms. Mother [Lv. 7500]"] = { label="Ms. Mother", emoji="🍖", color=15844367 },
 }
 
 local NOTIFY_COOLDOWN = 90
