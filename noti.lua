@@ -1,6 +1,13 @@
-local WEBHOOK_URL = "https://discord.com/api/webhooks/1488442806992109710/Ua4BOZiqbRCFQKrrWX1MTiPB9j6gPI8sIHzAwAxT2qKs18_soIEDmqvO0mjHCR4MSY8T"
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
+
+local WEBHOOK_URLS = {
+    [4520749081]  = "https://discord.com/api/webhooks/1488442806992109710/Ua4BOZiqbRCFQKrrWX1MTiPB9j6gPI8sIHzAwAxT2qKs18_soIEDmqvO0mjHCR4MSY8T",
+    [6381829480]  = "https://discord.com/api/webhooks/1490372443561394176/QMX52PZ8vbCUSozZe9Oy5l5AF5Ct-dDOJhm2Ocs3PdXBR8Cr611nERIgf9GXZLJgZhxR",
+    [15759515082] = "https://discord.com/api/webhooks/1490372544216436906/86LjHacFMUm-RBKNVzwLLgcT9U_01U_BPl9M6NHo-ylO-VjQq6CZQz6hpAVonPBdUiK2",
+}
+
+local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
 
 local BOSS_CONFIG = {
     ["Sea King"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
@@ -19,7 +26,7 @@ local BOSS_CONFIG = {
     ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
     ["Whirlpool"]                = { label="Whirlpool",                  emoji="🌀", color=1752220  },
     ["King Samurai [Lv. 3500]"]  = { label="King Samurai",               emoji="⚔️", color=15105570 },
-    ["Ms. Mother [Lv. 7500]"] = { label="Ms. Mother", emoji="🍖", color=15844367 },
+    ["Ms. Mother [Lv. 7500]"]    = { label="Ms. Mother",                 emoji="🍖", color=15844367 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -141,11 +148,9 @@ local function scanSpecialEvents()
     end
 end
 
--- Loop การทำงานหลัก
 task.spawn(function()
     while true do
         pcall(function()
-            -- 1. สแกนใน Folder ตามโครงสร้างเกม
             local monsterFolder = workspace:FindFirstChild("Monster")
             if monsterFolder then
                 local bossFolder = monsterFolder:FindFirstChild("Boss")
