@@ -10,23 +10,23 @@ local WEBHOOK_URLS = {
 local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
 
 local BOSS_CONFIG = {
-    ["Sea King"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
-    ["Serpent"]                  = { label="Serpent",                    emoji="🐍", color=3447003  },
+    ["Sea King"]                 = { label="Sea King",                    emoji="🌊", color=3447003  },
+    ["Serpent"]                  = { label="Serpent",                     emoji="🐍", color=3447003  },
     ["HydraSeaKing"]             = { label="Hydra Sea King",              emoji="🐙", color=10038562 },
     ["ThirdSeaDragon"]           = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
     ["SeaDragon"]                = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
-    ["Shark Galleon Boss"]       = { label="Shark Galleon Boss",         emoji="🦈", color=3447003  },
-    ["Kraken Galleon Boss"]      = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
-    ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                 emoji="🦕", color=5763719  },
-    ["GhostShip"]                = { label="Ghost Ship",                 emoji="👻", color=9807270  },
-    ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",         emoji="🐋", color=3447003  },
-    ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",              emoji="🦀", color=10038562 },
-    ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",              emoji="⚔️", color=15844367 },
-    ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",                emoji="🦅", color=15105570 },
-    ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
+    ["Shark Galleon Boss"]       = { label="Shark Galleon Boss",          emoji="🦈", color=3447003  },
+    ["Kraken Galleon Boss"]      = { label="Kraken Galleon Boss",         emoji="🦑", color=5763719  },
+    ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                  emoji="🦕", color=5763719  },
+    ["GhostShip"]                = { label="Ghost Ship",                  emoji="👻", color=9807270  },
+    ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",          emoji="🐋", color=3447003  },
+    ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",               emoji="🦀", color=10038562 },
+    ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",               emoji="⚔️", color=15844367 },
+    ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",                 emoji="🦅", color=15105570 },
+    ["FuryTentacle"]             = { label="Kraken",                      emoji="🐙", color=10038562 },
     ["Whirlpool"]                = { label="Whirlpool",                  emoji="🌀", color=1752220  },
-    ["King Samurai [Lv. 3500]"]  = { label="King Samurai",               emoji="⚔️", color=15105570 },
-    ["Ms. Mother [Lv. 7500]"]    = { label="Ms. Mother",                 emoji="🍖", color=15844367 },
+    ["King Samurai [Lv. 3500]"]  = { label="King Samurai",                emoji="⚔️", color=15105570 },
+    ["Ms. Mother [Lv. 7500]"]    = { label="Ms. Mother",                  emoji="🍖", color=15844367 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -72,14 +72,12 @@ local function sendWebhook(cfg)
         "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
         "👥 **Players**\n> `" .. #Players:GetPlayers() .. "/" .. Players.MaxPlayers .. "`\n\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        "🔑 **Job ID**\n> `" .. game.JobId .. "`\n\n" ..
-        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
         "*Detected by AxelHub Notifier*"
 
     task.spawn(function()
         local payload = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
-            content  = "```" .. game.JobId .. "```", 
+            content  = "🔑 **Job ID (Click to Copy)**\n```" .. game.JobId .. "```", 
             embeds = {{
                 title       = cfg.emoji .. "  Boss Alert — King Legacy",
                 description = description,
