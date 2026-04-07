@@ -10,23 +10,24 @@ local WEBHOOK_URLS = {
 local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
 
 local BOSS_CONFIG = {
-    ["Sea King"]                 = { label="Sea King",                    emoji="🌊", color=3447003  },
-    ["Serpent"]                  = { label="Serpent",                     emoji="🐍", color=3447003  },
-    ["HydraSeaKing"]             = { label="Hydra Sea King",              emoji="🐙", color=10038562 },
+    ["Sea King"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
+    ["Serpent"]                  = { label="Serpent",                    emoji="🐍", color=3447003  },
+    ["HydraSeaKing"]             = { label="Hydra Sea King",             emoji="🐙", color=10038562 },
     ["ThirdSeaDragon"]           = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
     ["SeaDragon"]                = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
-    ["Shark Galleon Boss"]       = { label="Shark Galleon Boss",          emoji="🦈", color=3447003  },
-    ["Kraken Galleon Boss"]      = { label="Kraken Galleon Boss",         emoji="🦑", color=5763719  },
-    ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                  emoji="🦕", color=5763719  },
-    ["GhostShip"]                = { label="Ghost Ship",                  emoji="👻", color=9807270  },
-    ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",          emoji="🐋", color=3447003  },
-    ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",               emoji="🦀", color=10038562 },
-    ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",               emoji="⚔️", color=15844367 },
-    ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",                 emoji="🦅", color=15105570 },
-    ["FuryTentacle"]             = { label="Kraken",                      emoji="🐙", color=10038562 },
+    ["Sea Dragon"]               = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
+    ["Shark Galleon Boss"]       = { label="Shark Galleon Boss",         emoji="🦈", color=3447003  },
+    ["Kraken Galleon Boss"]      = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
+    ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                 emoji="🦕", color=5763719  },
+    ["GhostShip"]                = { label="Ghost Ship",                 emoji="👻", color=9807270  },
+    ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",         emoji="🐋", color=3447003  },
+    ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",              emoji="🦀", color=10038562 },
+    ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",              emoji="⚔️", color=15844367 },
+    ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",                emoji="🦅", color=15105570 },
+    ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
     ["Whirlpool"]                = { label="Whirlpool",                  emoji="🌀", color=1752220  },
-    ["King Samurai [Lv. 3500]"]  = { label="King Samurai",                emoji="⚔️", color=15105570 },
-    ["Ms. Mother [Lv. 7500]"]    = { label="Ms. Mother",                  emoji="🍖", color=15844367 },
+    ["King Samurai [Lv. 3500]"]  = { label="King Samurai",               emoji="⚔️", color=15105570 },
+    ["Ms. Mother [Lv. 7500]"]    = { label="Ms. Mother",                 emoji="🍖", color=15844367 },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -64,7 +65,7 @@ local function sendRequest(payload)
 end
 
 local function sendWebhook(cfg)
-    local description = 
+    local description =
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
         cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
@@ -77,7 +78,7 @@ local function sendWebhook(cfg)
     task.spawn(function()
         local payload = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
-            content  = "```" .. game.JobId .. "```", 
+            content  = "```" .. game.JobId .. "```",
             embeds = {{
                 title       = cfg.emoji .. "  Boss Alert — King Legacy",
                 description = description,
@@ -94,25 +95,33 @@ local function tryNotify(mobName, mob)
     local cfg = nil
     local keyName = ""
 
-    for key, data in pairs(BOSS_CONFIG) do
-        if mobName:find(key) or key:find(mobName) then
-            cfg = data
-            keyName = key
-            break
+    if BOSS_CONFIG[mobName] then
+        cfg = BOSS_CONFIG[mobName]
+        keyName = mobName
+    else
+        for key, data in pairs(BOSS_CONFIG) do
+            if mobName:find(key, 1, true) or key:find(mobName, 1, true) then
+                cfg = data
+                keyName = key
+                break
+            end
         end
     end
 
-    if not cfg then return end
+    if not cfg then
+        print("[DEBUG] ไม่เจอ config สำหรับ:", mobName)
+        return
+    end
 
     local hum = mob:FindFirstChildOfClass("Humanoid") or mob:FindFirstChildWhichIsA("Humanoid", true)
-    if not (hum and hum.Health > 0) then 
+    if not (hum and hum.Health > 0) then
         Notiboss[keyName] = nil
-        return 
+        return
     end
 
     local now = tick()
     if Notiboss[keyName] and (now - Notiboss[keyName]) < NOTIFY_COOLDOWN then return end
-    
+
     Notiboss[keyName] = now
     sendWebhook(cfg)
 end
@@ -162,6 +171,7 @@ task.spawn(function()
             local seaFolder = workspace:FindFirstChild("SeaMonster")
             if seaFolder then
                 for _, mob in ipairs(seaFolder:GetChildren()) do
+                    print("[DEBUG SeaMonster]", mob.Name) 
                     tryNotify(mob.Name, mob)
                 end
             end
@@ -182,6 +192,6 @@ task.spawn(function()
 
             scanSpecialEvents()
         end)
-        task.wait(5) 
+        task.wait(5)
     end
 end)
