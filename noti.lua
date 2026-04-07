@@ -77,7 +77,7 @@ local function sendWebhook(cfg)
     task.spawn(function()
         local payload = HttpService:JSONEncode({
             username = "⚔️ AxelHub Notifier",
-            content  = "🔑 **Job ID (Click to Copy)**\n```" .. game.JobId .. "```", 
+            content  = "```" .. game.JobId .. "```", 
             embeds = {{
                 title       = cfg.emoji .. "  Boss Alert — King Legacy",
                 description = description,
