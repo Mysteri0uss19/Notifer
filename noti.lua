@@ -108,10 +108,7 @@ local function tryNotify(mobName, mob)
         end
     end
 
-    if not cfg then
-        print("[DEBUG] ไม่เจอ config สำหรับ:", mobName)
-        return
-    end
+    
 
     local hum = mob:FindFirstChildOfClass("Humanoid") or mob:FindFirstChildWhichIsA("Humanoid", true)
     if not (hum and hum.Health > 0) then
@@ -171,7 +168,6 @@ task.spawn(function()
             local seaFolder = workspace:FindFirstChild("SeaMonster")
             if seaFolder then
                 for _, mob in ipairs(seaFolder:GetChildren()) do
-                    print("[DEBUG SeaMonster]", mob.Name) 
                     tryNotify(mob.Name, mob)
                 end
             end
