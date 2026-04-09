@@ -50,15 +50,27 @@ end
 
 local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/1491661666738503782/1mY5pQaVLzD8Lq9RLI9l6EX_GYOV0jnzG7O7bAMwpmMK85SpqpknaUDrkzJJ_I-bhU46"
 
+local seenUsers = {}       
+local RESET_INTERVAL = 3600 
+
 local function sendUserTracker()
     local plr = Players.LocalPlayer
+    local userId = plr.UserId
+    local now = tick()
+
+    if seenUsers[userId] and (now - seenUsers[userId]) < RESET_INTERVAL then
+        return
+    end
+
+    seenUsers[userId] = now  
+
     task.spawn(function()
         local payload = HttpService:JSONEncode({
             username = "📊 AxelHub Tracker",
             embeds = {{
                 title = "👤 User Running Script",
                 description =
-                    "**User ID:** `" .. plr.UserId .. "`\n" ..
+                    "**User ID:** `" .. userId .. "`\n" ..
                     "**Player:** `" .. plr.Name .. "`\n" ..
                     "**World:** " .. getWorldName(),
                 color = 5763719,
@@ -82,7 +94,6 @@ local function sendUserTracker()
 end
 
 sendUserTracker()
-
 local function sendRequest(payload)
     pcall(function()
         local requestFunc = syn and syn.request or http and http.request or (typeof(request) == "function" and request)
