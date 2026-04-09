@@ -48,7 +48,7 @@ local function getWorldName()
     else return "🗺️ Unknown" end
 end
 
-local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/YOUR_TRACKER_WEBHOOK_HERE"
+local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/1491661666738503782/1mY5pQaVLzD8Lq9RLI9l6EX_GYOV0jnzG7O7bAMwpmMK85SpqpknaUDrkzJJ_I-bhU46"
 
 local function sendUserTracker()
     local plr = Players.LocalPlayer
