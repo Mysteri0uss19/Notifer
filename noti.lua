@@ -48,10 +48,10 @@ local function getWorldName()
     else return "🗺️ Unknown" end
 end
 
-local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/1491661666738503782/1mY5pQaVLzD8Lq9RLI9l6EX_GYOV0jnzG7O7bAMwpmMK85SpqpknaUDrkzJJ_I-bhU46"
+local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/1491672353992605858/LsB3vhfe5fdgfwUfFdu-mgeXG_Y2arD_Jz4Bl9AGZOIanyI73eqMbc1lq90qQcfU_t5i"
 
 local seenUsers = {}       
-local RESET_INTERVAL = 3600 
+local RESET_INTERVAL = 43200 
 
 local function sendUserTracker()
     local plr = Players.LocalPlayer
