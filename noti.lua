@@ -48,6 +48,41 @@ local function getWorldName()
     else return "🗺️ Unknown" end
 end
 
+local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/YOUR_TRACKER_WEBHOOK_HERE"
+
+local function sendUserTracker()
+    local plr = Players.LocalPlayer
+    task.spawn(function()
+        local payload = HttpService:JSONEncode({
+            username = "📊 AxelHub Tracker",
+            embeds = {{
+                title = "👤 User Running Script",
+                description =
+                    "**User ID:** `" .. plr.UserId .. "`\n" ..
+                    "**Player:** `" .. plr.Name .. "`\n" ..
+                    "**World:** " .. getWorldName(),
+                color = 5763719,
+                footer = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC" }
+            }}
+        })
+        pcall(function()
+            local requestFunc = syn and syn.request or http and http.request or (typeof(request) == "function" and request)
+            if requestFunc then
+                requestFunc({
+                    Url = TRACKER_WEBHOOK,
+                    Method = "POST",
+                    Headers = { ["Content-Type"] = "application/json" },
+                    Body = payload,
+                })
+            else
+                HttpService:PostAsync(TRACKER_WEBHOOK, payload, Enum.HttpContentType.ApplicationJson)
+            end
+        end)
+    end)
+end
+
+sendUserTracker()
+
 local function sendRequest(payload)
     pcall(function()
         local requestFunc = syn and syn.request or http and http.request or (typeof(request) == "function" and request)
