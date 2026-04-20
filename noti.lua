@@ -4,7 +4,7 @@ local HttpService = game:GetService("HttpService")
 local WEBHOOK_URLS = {
     [4520749081]  = "https://discord.com/api/webhooks/1488442806992109710/Ua4BOZiqbRCFQKrrWX1MTiPB9j6gPI8sIHzAwAxT2qKs18_soIEDmqvO0mjHCR4MSY8T",
     [6381829480]  = "https://discord.com/api/webhooks/1490372443561394176/QMX52PZ8vbCUSozZe9Oy5l5AF5Ct-dDOJhm2Ocs3PdXBR8Cr611nERIgf9GXZLJgZhxR",
-    [15759515082] = "https://discord.com/api/webhooks/1490372544216436906/86LjHacFMUm-RBKNVzwLLgcT9U_01U_BPl9M6NHo-ylO-VjQq6CZQz6hpAVonPBdUiK2",
+    [15759515082] = "https://discord.com/api/webhooks/1495764835902816358/cU3g6Mrndh367yXhs2aZSxkDFs-2WTFnTrmW2mDCExpa7OF--wkupHWE5uzBpUCGleRN",
 }
 
 local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
