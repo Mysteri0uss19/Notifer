@@ -10,23 +10,27 @@ local WEBHOOK_URLS = {
 local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
 
 local BOSS_CONFIG = {
-    ["SeaKing"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
-    ["Serpent"]                  = { label="Serpent",                    emoji="🐍", color=3447003  },
-    ["HydraSeaKing"]             = { label="Hydra Sea King",             emoji="🐙", color=10038562 },
-    ["ThirdSeaDragon"]           = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
-    ["SeaDragon"]                = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
-    ["Sea Dragon"]               = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
-    ["Shark Galleon Boss"]       = { label="Shark Galleon Boss",         emoji="🦈", color=3447003  },
-    ["Kraken Galleon Boss"]      = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
-    ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                 emoji="🦕", color=5763719  },
-    ["GhostShip"]                = { label="Ghost Ship",                 emoji="👻", color=9807270  },
-    ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",         emoji="🐋", color=3447003  },
-    ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",              emoji="⚔️", color=15844367 },
-    ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",                emoji="🦅", color=15105570 },
-    ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
-    ["Whirlpool"]                = { label="Whirlpool",                  emoji="🌀", color=1752220  },
-    ["King Samurai [Lv. 3500]"]  = { label="King Samurai",               emoji="⚔️", color=15105570 },
-    ["Ms. Mother [Lv. 7500]"]    = { label="Ms. Mother",                 emoji="🍖", color=15844367 },
+    -- World 1
+    ["SeaKing"]                      = { label="Sea King",                   emoji="🌊", color=3447003  },
+    ["Serpent"]                       = { label="Serpent",                    emoji="🐍", color=3447003  },
+    ["King Samurai [Lv. 3500]"]      = { label="King Samurai",               emoji="⚔️", color=15105570 },
+    ["The Ice King [Lv. 3350]"]      = { label="The Ice King",               emoji="❄️", color=5592575  },
+    ["The Crimson Demon [Lv. 3375]"] = { label="The Crimson Demon",          emoji="😈", color=15158332 },
+    ["HydraSeaKing"]                  = { label="Hydra Sea King",             emoji="🐙", color=10038562 },
+    ["Ms. Mother [Lv. 7500]"]        = { label="Ms. Mother",                 emoji="🍖", color=15844367 },
+    ["Lord of Saber [Lv. 8500]"]     = { label="Lord of Saber",              emoji="⚔️", color=15844367 },
+    ["Shark Galleon Boss"]            = { label="Shark Galleon Boss",         emoji="🦈", color=3447003  },
+    ["Kraken Galleon Boss"]           = { label="Kraken Galleon Boss",        emoji="🦑", color=5763719  },
+    ["Whale Galleon Boss"]            = { label="Whale Galleon Boss",         emoji="🐋", color=3447003  },
+    ["GhostShip"]                     = { label="Ghost Ship",                 emoji="👻", color=9807270  },
+    ["FuryTentacle"]                  = { label="Kraken (Chaos Tentacle)",    emoji="🐙", color=10038562 },
+    ["Tentacle"]                      = { label="Kraken Tentacle",            emoji="🐙", color=10038562 },
+    ["SeaDragon"]                     = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
+    ["Sea Dragon"]                    = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
+    ["ThirdSeaDragon"]                = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
+    ["ThirdSeaEldritch Crab"]         = { label="Eldritch Crab",              emoji="🦀", color=15105570 },
+    ["Pteranodon [Lv. 12500]"]        = { label="Pteranodon",                 emoji="🦕", color=5763719  },
+    ["Whirlpool"]                     = { label="Whirlpool",                  emoji="🌀", color=1752220  },
 }
 
 local NOTIFY_COOLDOWN = 90
@@ -49,8 +53,8 @@ end
 
 local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/1491672353992605858/LsB3vhfe5fdgfwUfFdu-mgeXG_Y2arD_Jz4Bl9AGZOIanyI73eqMbc1lq90qQcfU_t5i"
 
-local seenUsers = {}       
-local RESET_INTERVAL = 43200 
+local seenUsers = {}
+local RESET_INTERVAL = 43200
 
 local function sendUserTracker()
     local plr = Players.LocalPlayer
@@ -61,7 +65,7 @@ local function sendUserTracker()
         return
     end
 
-    seenUsers[userId] = now  
+    seenUsers[userId] = now
 
     task.spawn(function()
         local payload = HttpService:JSONEncode({
@@ -93,6 +97,7 @@ local function sendUserTracker()
 end
 
 sendUserTracker()
+
 local function sendRequest(payload)
     pcall(function()
         local requestFunc = syn and syn.request or http and http.request or (typeof(request) == "function" and request)
@@ -112,7 +117,7 @@ end
 local function sendWebhook(cfg)
     local description =
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
-        cfg.emoji .. "  **" .. cfg.label .. " Spawned !**\n" ..
+        cfg.emoji .. "  **" .. cfg.label .. " Spawned!**\n" ..
         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
         "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
         "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
@@ -153,7 +158,7 @@ local function tryNotify(mobName, mob)
         end
     end
 
-    
+    if not cfg or keyName == "" then return end
 
     local hum = mob:FindFirstChildOfClass("Humanoid") or mob:FindFirstChildWhichIsA("Humanoid", true)
     if not (hum and hum.Health > 0) then
@@ -170,7 +175,11 @@ end
 
 local function scanSpecialEvents()
     local e = workspace:FindFirstChild("Effects")
-    local wp = e and (e:FindFirstChild("SerpentWhirlpool") or e:FindFirstChild("SeaKingWhirlpool") or e:FindFirstChild("Whirlpool"))
+    local wp = e and (
+        e:FindFirstChild("SerpentWhirlpool") or
+        e:FindFirstChild("SeaKingWhirlpool") or
+        e:FindFirstChild("Whirlpool")
+    )
     if wp then
         if not Notiboss["Whirlpool"] or (tick() - Notiboss["Whirlpool"]) > NOTIFY_COOLDOWN then
             Notiboss["Whirlpool"] = tick()
@@ -184,13 +193,18 @@ local function scanSpecialEvents()
     if gs then
         local alive = false
         for _, v in ipairs(gs:GetDescendants()) do
-            if v:IsA("Humanoid") and v.Health > 0 then alive = true break end
+            if v:IsA("Humanoid") and v.Health > 0 then
+                alive = true
+                break
+            end
         end
         if alive then
             if not Notiboss["GhostShip"] or (tick() - Notiboss["GhostShip"]) > NOTIFY_COOLDOWN then
                 Notiboss["GhostShip"] = tick()
                 sendWebhook(BOSS_CONFIG["GhostShip"])
             end
+        else
+            Notiboss["GhostShip"] = nil
         end
     else
         Notiboss["GhostShip"] = nil
@@ -208,8 +222,8 @@ task.spawn(function()
                         tryNotify(mob.Name, mob)
                     end
                 end
-            end
 
+            -- Sea Monster
             local seaFolder = workspace:FindFirstChild("SeaMonster")
             if seaFolder then
                 for _, mob in ipairs(seaFolder:GetChildren()) do
@@ -217,6 +231,7 @@ task.spawn(function()
                 end
             end
 
+            -- MOB folder (Ashen Talon etc.)
             local mobFolder = workspace:FindFirstChild("MOB")
             if mobFolder then
                 for _, mob in ipairs(mobFolder:GetChildren()) do
@@ -224,6 +239,7 @@ task.spawn(function()
                 end
             end
 
+            -- Pteranodon
             local pteroFolder = workspace:FindFirstChild("Pteranodon_KL")
             if pteroFolder then
                 for _, mob in ipairs(pteroFolder:GetChildren()) do
@@ -233,6 +249,7 @@ task.spawn(function()
 
             scanSpecialEvents()
         end)
-        task.wait(5)
+
+        task.wait(10) 
     end
 end)
