@@ -28,7 +28,6 @@ local BOSS_CONFIG = {
     ["SeaDragon"]                     = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
     ["Sea Dragon"]                    = { label="Sea Dragon (Tyrant)",        emoji="🐲", color=15158332 },
     ["ThirdSeaDragon"]                = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
-    ["ThirdSeaEldritch Crab"]         = { label="Eldritch Crab",              emoji="🦀", color=15105570 },
     ["Pteranodon [Lv. 12500]"]        = { label="Pteranodon",                 emoji="🦕", color=5763719  },
     ["Whirlpool"]                     = { label="Whirlpool",                  emoji="🌀", color=1752220  },
 }
