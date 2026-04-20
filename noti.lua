@@ -21,7 +21,6 @@ local BOSS_CONFIG = {
     ["Pteranodon [Lv. 12500]"]   = { label="Pteranodon",                 emoji="🦕", color=5763719  },
     ["GhostShip"]                = { label="Ghost Ship",                 emoji="👻", color=9807270  },
     ["Whale Galleon Boss"]       = { label="Whale Galleon Boss",         emoji="🐋", color=3447003  },
-    ["ThirdSeaEldritch Crab"]    = { label="Eldritch Crab",              emoji="🦀", color=10038562 },
     ["Lord of Saber [Lv. 8500]"] = { label="Lord of Saber",              emoji="⚔️", color=15844367 },
     ["Ashen Talon [Lv. 10000]"]  = { label="Ashen Talon",                emoji="🦅", color=15105570 },
     ["FuryTentacle"]             = { label="Kraken",                     emoji="🐙", color=10038562 },
