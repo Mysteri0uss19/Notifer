@@ -10,7 +10,6 @@ local WEBHOOK_URLS = {
 local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
 
 local BOSS_CONFIG = {
-    -- World 1
     ["SeaKing"]                      = { label="Sea King",                   emoji="🌊", color=3447003  },
     ["Serpent"]                       = { label="Serpent",                    emoji="🐍", color=3447003  },
     ["King Samurai [Lv. 3500]"]      = { label="King Samurai",               emoji="⚔️", color=15105570 },
