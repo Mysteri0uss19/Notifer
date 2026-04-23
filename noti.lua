@@ -11,7 +11,7 @@ local WEBHOOK_URL = WEBHOOK_URLS[game.PlaceId] or WEBHOOK_URLS[4520749081]
 
 local BOSS_CONFIG = {
     ["Sea King"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
-    ["SeaKing"]                 = { label="Sea King",                   emoji="🌊", color=3447003  },
+    ["SeaKing"]                  = { label="Sea King",                   emoji="🌊", color=3447003  },
     ["Serpent"]                  = { label="Serpent",                    emoji="🐍", color=3447003  },
     ["HydraSeaKing"]             = { label="Hydra Sea King",             emoji="🐙", color=10038562 },
     ["ThirdSeaDragon"]           = { label="Drakenfyr the Inferno King", emoji="🔥", color=15158332 },
@@ -51,8 +51,8 @@ end
 
 local TRACKER_WEBHOOK = "https://discord.com/api/webhooks/1491672353992605858/LsB3vhfe5fdgfwUfFdu-mgeXG_Y2arD_Jz4Bl9AGZOIanyI73eqMbc1lq90qQcfU_t5i"
 
-local seenUsers = {}       
-local RESET_INTERVAL = 43200 
+local seenUsers = {}
+local RESET_INTERVAL = 43200
 
 local function sendUserTracker()
     local plr = Players.LocalPlayer
@@ -63,7 +63,7 @@ local function sendUserTracker()
         return
     end
 
-    seenUsers[userId] = now  
+    seenUsers[userId] = now
 
     task.spawn(function()
         local payload = HttpService:JSONEncode({
@@ -95,6 +95,7 @@ local function sendUserTracker()
 end
 
 sendUserTracker()
+
 local function sendRequest(payload)
     pcall(function()
         local requestFunc = syn and syn.request or http and http.request or (typeof(request) == "function" and request)
@@ -155,8 +156,6 @@ local function tryNotify(mobName, mob)
         end
     end
 
-
-
     local hum = mob:FindFirstChildOfClass("Humanoid") or mob:FindFirstChildWhichIsA("Humanoid", true)
     if not (hum and hum.Health > 0) then
         Notiboss[keyName] = nil
@@ -199,6 +198,90 @@ local function scanSpecialEvents()
     end
 end
 
+-- ──────────────────────────────────────────
+--  Island Notifier
+-- ──────────────────────────────────────────
+local ISLAND_WEBHOOK = "https://discord.com/api/webhooks/1496816783053688893/YPEoGkA0Yz8uiFgImmf1E6mes-7X2TsuGyCZdoG70nIZzmNeaXJyKW71XwCqoCxEG9f6"
+
+local ISLAND_CONFIG = {
+    ["Human Island"]  = { label = "Human Island",  emoji = "👤", color = 15844367 },
+    ["Animal Island"] = { label = "Animal Island", emoji = "🐾", color = 5763719  },
+    ["Angel Island"]  = { label = "Angel Island",  emoji = "😇", color = 16777215  },
+    ["Fish Island"]   = { label = "Fish Island",   emoji = "🐟", color = 3447003  },
+}
+
+local ISLAND_COOLDOWN = 120
+local NotiIsland = {}
+
+local function sendIslandRequest(payload)
+    pcall(function()
+        local requestFunc = syn and syn.request or http and http.request or (typeof(request) == "function" and request)
+        if requestFunc then
+            requestFunc({
+                Url = ISLAND_WEBHOOK,
+                Method = "POST",
+                Headers = { ["Content-Type"] = "application/json" },
+                Body = payload,
+            })
+        else
+            HttpService:PostAsync(ISLAND_WEBHOOK, payload, Enum.HttpContentType.ApplicationJson)
+        end
+    end)
+end
+
+local function sendIslandWebhook(cfg)
+    local description =
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+        cfg.emoji .. "  **" .. cfg.label .. " is in this server!**\n" ..
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" ..
+        "🌐 **World**\n> " .. getWorldName() .. "\n\n" ..
+        "⏰ **Server Time**\n> `" .. getTimeOfDay() .. "`\n\n" ..
+        "👥 **Players**\n> `" .. #Players:GetPlayers() .. "/" .. Players.MaxPlayers .. "`\n\n" ..
+        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" ..
+        "*Detected by AxelHub Notifier*"
+
+    task.spawn(function()
+        local payload = HttpService:JSONEncode({
+            username = "🏝️ AxelHub Island Tracker",
+            content  = "```" .. game.JobId .. "```",
+            embeds = {{
+                title       = cfg.emoji .. "  Island Alert — King Legacy",
+                description = description,
+                color       = cfg.color,
+                footer      = { text = "🕐 " .. os.date("!%Y-%m-%d %H:%M:%S") .. " UTC" },
+                thumbnail   = { url = "https://www.roblox.com/favicon.ico" },
+            }}
+        })
+        sendIslandRequest(payload)
+    end)
+end
+
+task.spawn(function()
+    while true do
+        pcall(function()
+            local islandFolder = workspace:FindFirstChild("Island")
+            if islandFolder then
+                for islandName, cfg in pairs(ISLAND_CONFIG) do
+                    local found = islandFolder:FindFirstChild(islandName)
+                    if found then
+                        local now = tick()
+                        if not NotiIsland[islandName] or (now - NotiIsland[islandName]) > ISLAND_COOLDOWN then
+                            NotiIsland[islandName] = now
+                            sendIslandWebhook(cfg)
+                        end
+                    else
+                        NotiIsland[islandName] = nil
+                    end
+                end
+            end
+        end)
+        task.wait(10)
+    end
+end)
+
+-- ──────────────────────────────────────────
+--  Boss Scan Loop
+-- ──────────────────────────────────────────
 task.spawn(function()
     while true do
         pcall(function()
